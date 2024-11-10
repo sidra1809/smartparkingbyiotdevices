@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Parking System</title>
+    <style>
+        /* Basic styling */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        /* Form styling */
+        #user-form {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="email"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        #submit-btn {
+            padding: 10px 20px;
+            background-color: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+        #submit-btn:disabled {
+            background-color: #999;
+        }
+        /* Parking container styling */
+        #parking-container {
+            display: grid;
+            grid-template-columns: repeat(5, 100px);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .parking-slot {
+            width: 100px;
+            height: 100px;
+            background-color: #4CAF50;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .parking-slot.booked {
+            background-color: #e74c3c;
+            cursor: not-allowed;
+        }
+        #status {
+            font-size: 1.2em;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Smart Parking System - Book Your Slot</h1>
+    
+    <!-- User Form -->
+    <form id="user-form">
+        <label for="username">Name:</label>
+        <input type="text" id="username" required>
+        
+        <label for="email">Email:</label>
+        <input type="email" id="email" required>
+
+        <label for="number">Mobile No.:</label>
+        <input type="email" id="email" required>        
+        <button type="button" id="submit-btn" onclick="enableBooking()">Submit</button>
+    </form>
+    
+    <!-- Parking Slots -->
+    <div id="parking-container">
+        <div class="parking-slot" id="slot-1" onclick="bookSlot('slot-1')">1</div>
+        <div class="parking-slot" id="slot-2" onclick="bookSlot('slot-2')">2</div>
+        <div class="parking-slot" id="slot-3" onclick="bookSlot('slot-3')">3</div>
+        <div class="parking-slot" id="slot-4" onclick="bookSlot('slot-4')">4</div>
+        <div class="parking-slot" id="slot-5" onclick="bookSlot('slot-5')">5</div>
+    </div>
+    
+    <div id="status"></div>
+    
+    <script>
+        // Variables to store user information
+        let userName = "";
+        let userEmail = "";
+        let isUserRegistered = false;
+
+        // Enable booking after user submits the form
+        function enableBooking() {
+            userName = document.getElementById("username").value;
+            userEmail = document.getElementById("email").value;
+
+            if (userName && userEmail) {
+                isUserRegistered = true;
+                document.getElementById("status").innerText = `Welcome, ${userName}! Select a slot to book.`;
+                document.getElementById("user-form").style.display = "none";
+            } else {
+                document.getElementById("status").innerText = "Please enter all details.";
+            }
+        }
+
+        // Slot booking function
+        function bookSlot(slotId) {
+            const slot = document.getElementById(slotId);
+            const statusDiv = document.getElementById("status");
+
+            if (!isUserRegistered) {
+                statusDiv.innerText = "Please enter your details to book a slot.";
+                return;
+            }
+
+            if (slot.classList.contains("booked")) {
+                statusDiv.innerText = `Slot ${slot.innerText} is already booked.`;
+            } else {
+                slot.classList.add("booked");
+                statusDiv.innerText = `Slot ${slot.innerText} has been successfully booked by ${userName}!`;
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+body{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+
+}
+div.cover{
+    position: relative;
+}
+div .input{
+  font-size: 10px;
+  color:white;
+  position: absolute;
+  top: 10%;
+  padding: 10px;
+  left: 5%;
+}

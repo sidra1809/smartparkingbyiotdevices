@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parking Entry System</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f4f4f9;
+      margin: 0;
+    }
+    .container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 300px;
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+    .payment-method {
+      margin-bottom: 10px;
+    }
+    label {
+      margin-right: 10px;
+    }
+    #payment-confirm-btn {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    #entry-status {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Parking Entry System</h2>
+  <p>Select a payment method:</p>
+
+  <div class="payment-method">
+    <input type="radio" id="cash" name="payment" value="cash">
+    <label for="cash">Cash</label>
+  </div>
+
+  <div class="payment-method">
+    <!-- <input type="" id="card" name="payment" value="card"> -->
+    <label for="card"><a href="/card.html">Card</a></label>
+  </div>
+
+  <div class="payment-method">
+    <!-- <input type="" id="upi" name="payment" value="upi"> -->
+    <label for="upi"><a href="/qr.html">UPI</a></label>
+  </div>
+
+  <button id="payment-confirm-btn" onclick="confirmPayment()">Confirm Payment</button>
+
+  <p id="entry-status"></p>
+</div>
+
+<script>
+  function confirmPayment() {
+    const selectedPayment = document.querySelector('input[name="payment"]:checked');
+    const entryStatus = document.getElementById('entry-status');
+    
+    if (selectedPayment) {
+      console.log("Payment accepted, proceeding to redirect.");
+      entryStatus.textContent = "Payment accepted. Car entry granted!";
+      entryStatus.style.color = "green";
+      window.location.href = "login.html";  // Redirect to login page
+    } else {
+      console.log("Payment not selected or invalid.");
+      entryStatus.textContent = "Please select a payment method.";
+      entryStatus.style.color = "red";
+    }
+  }
+</script>
+
+</body>
+</html>

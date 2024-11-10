@@ -1,0 +1,83 @@
+#include <Servo.h>
+
+// Define the pin for the IR sensor and the servo motor
+const int irSensorPin = 2;  // IR sensor pin
+const int servoPin = 7;      // Servo motor pin (updated to pin 7)
+
+Servo servo;  // Servo object
+bool slotStatus = false;     // Slot status: true = booked, false = available
+bool lastSensorState = HIGH; // Last state of the IR sensor for debouncing
+
+void setup() {
+  Serial.begin(9600);  // Start Serial communication for debugging
+
+  pinMode(irSensorPin, INPUT);  // Set IR sensor pin as input
+  servo.attach(servoPin);       // Attach servo motor to pin 7
+  servo.write(90);              // Initial position (90°) - barrier closed
+  
+  Serial.println("Parking system initialized. Waiting for car detection...");
+}
+
+void loop() {
+  // Check for incoming serial data (book/cancel requests from web interface)
+  if (Serial.available() > 0) {
+    String command = Serial.readStringUntil('\n');
+    handleCommand(command);
+  }
+
+  // Monitor IR sensor to check for car presence
+  bool currentSensorState = digitalRead(irSensorPin) == LOW;  // LOW means car detected, HIGH means no car
+
+  // Only process state change (debounce)
+  if (currentSensorState != lastSensorState) {
+    if (currentSensorState == LOW) {  // Car detected
+      Serial.println("Car detected at slot.");
+
+      // If the slot is booked, open the barrier
+      if (slotStatus) {
+        openBarrier();
+        delay(5000);  // Keep the barrier open for 5 seconds
+        closeBarrier();
+      } else {
+        Serial.println("Slot is not booked.");
+      }
+    } else {
+      Serial.println("Slot is empty.");
+    }
+
+    // Update the last sensor state to avoid continuous reporting
+    lastSensorState = currentSensorState;
+    delay(500);  // Delay for debouncing, prevents multiple readings in a short time
+  }
+}
+
+// Function to handle commands from the web interface
+void handleCommand(String command) {
+  if (command.startsWith("BOOK")) {
+    if (!slotStatus) {
+      slotStatus = true;  // Mark slot as booked
+      Serial.println("Slot booked successfully.");
+    } else {
+      Serial.println("Slot is already booked.");
+    }
+  } else if (command.startsWith("CANCEL")) {
+    if (slotStatus) {
+      slotStatus = false;  // Mark slot as available
+      Serial.println("Slot booking cancelled.");
+    } else {
+      Serial.println("Slot is not booked.");
+    }
+  }
+}
+
+// Function to open the barrier (servo)
+void openBarrier() {
+  servo.write(0);  // Open position (0°)
+  Serial.println("Barrier opened.");
+}
+
+// Function to close the barrier (servo)
+void closeBarrier() {
+  servo.write(90); // Closed position (90°)
+  Serial.println("Barrier closed.");
+}
